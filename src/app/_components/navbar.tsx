@@ -15,7 +15,13 @@ export async function Navbar({ session }: { session: Session }) {
       </Link>
       <Link href="/group" className="btn">
         Группы
-      </Link>      
+      </Link>
+      <Link href="/taskType" className="btn">
+        Задачи
+      </Link>
+      <Link href="/student" className="btn">
+        Студент
+      </Link>
     </div>
   );
 }
