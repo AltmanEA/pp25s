@@ -5,6 +5,7 @@ import { deleteTutor } from "~/app/api/action/squad";
 import TutorSearch from "../../ui/tutorSearch";
 import { db } from "~/server/db";
 import { Students } from "~/app/_components/squad/students";
+import { auth } from "~/server/auth";
 // import { api } from "~/trpc/server";
 
 
@@ -31,6 +32,10 @@ export default async function Page(props: {
   })
   const task = squad?.task
   const tutor = squad?.tutor  
+
+  const session = await auth();
+  const role = session?.user.role;
+  const mode = role === "ADMIN" || (squad?.tutorId === session?.user.id);
 
   // const gr = await api.post.hello({ text: "server world" });
   // console.log("\n\nTRPC\n\n", gr);
@@ -64,7 +69,7 @@ export default async function Page(props: {
           squadId={squad?.id ?? ""}          
         />
       </div>
-      <Students squadId={squad?.id ?? ""} taskId={task?.id ?? ""}/>
+      <Students squadId={squad?.id ?? ""} taskId={task?.id ?? ""} mode={mode}/>
     </main>
   );
 }
