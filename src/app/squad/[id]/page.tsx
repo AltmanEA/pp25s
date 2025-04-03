@@ -10,28 +10,29 @@ import { auth } from "~/server/auth";
 
 
 export default async function Page(props: {
-  params: Promise<{ id: string  }>;
+  params: Promise<{ id: string }>;
   searchParams: Promise<{
     query?: string;
     student?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const query = searchParams.query || "";  
+  const query = searchParams.query || "";
   const params = await props.params;
   const squad = await db.squad.findUnique({
     where: { id: params.id },
-    include: {       
-      task: true, 
+    include: {
+      task: true,
       tutor: true,
       StudentsOnTasks: {
         include: {
           student: true
         }
-      } },
+      }
+    },
   })
   const task = squad?.task
-  const tutor = squad?.tutor  
+  const tutor = squad?.tutor
 
   const session = await auth();
   const role = session?.user.role;
@@ -39,7 +40,7 @@ export default async function Page(props: {
 
   // const gr = await api.post.hello({ text: "server world" });
   // console.log("\n\nTRPC\n\n", gr);
- 
+
   return (
     <main>
       <Link href={`/task/${task?.id}`} className="btn btn-primary">
@@ -66,10 +67,11 @@ export default async function Page(props: {
         </table>
         <TutorSearch
           query={query}
-          squadId={squad?.id ?? ""}          
+          squadId={squad?.id ?? ""}
         />
       </div>
-      <Students squadId={squad?.id ?? ""} taskId={task?.id ?? ""} mode={mode}/>
+      <Students squadId={squad?.id ?? ""} taskId={task?.id ?? ""} mode={true} squadTutorId={tutor?.id ?? ""} />
+      {/* <Students squadId={squad?.id ?? ""} taskId={task?.id ?? ""} mode={mode}/> */}
     </main>
   );
 }
